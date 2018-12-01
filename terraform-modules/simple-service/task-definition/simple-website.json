@@ -2,7 +2,7 @@
   {
     "essential": true,
     "memoryReservation": null,
-    "image": "tutum/hello-world:${image_version}",
+    "image": "faizhasim/papaadamango:${image_version}",
     "name": "${container_name}",
     "portMappings": [
       {
