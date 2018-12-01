@@ -1,0 +1,16 @@
+[
+  {
+    "essential": true,
+    "memoryReservation": null,
+    "image": "tutum/hello-world:latest",
+    "name": "${container_name}",
+    "portMappings": [
+      {
+        "hostPort": ${container_port},
+        "protocol": "tcp",
+        "containerPort": ${container_port}
+      }
+    ],
+    "environment": []
+  }
+]
