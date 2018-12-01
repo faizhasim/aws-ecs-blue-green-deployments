@@ -1,6 +1,6 @@
 const express = require('express')
 const os = require('os');
-const { machineIdSync } = require('node-machine-id');
+const { machineIdSync } = require('node-machine-id')
 const humanizeDuration = require('humanize-duration')
 
 const app = express()
@@ -33,7 +33,7 @@ app.get('/', (req, res) => res.send(`
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Hello Bulma!</title>
+    <title>papaadamango</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>

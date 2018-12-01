@@ -42,6 +42,18 @@ jobs:
           docker push "${DOCKER_IMAGE}:${CIRCLE_SHA1}"
           docker push "${DOCKER_IMAGE}:latest"
 
+  deploy_single_ecs_cluster:
+    working_directory: ~/deploy
+    docker:
+    - image: hashicorp/terraform:0.11.10
+    steps:
+    - checkout
+    - run:
+        name: terraform init
+        command: cd terraform/single-ecs-cluster && terraform init -backend=true -force-copy -get=true -input=false
+    - deploy:
+        name: terraform apply
+        command: cd terraform/single-ecs-cluster && terraform apply -auto-approve
 
 workflows:
   version: 2
@@ -57,9 +69,13 @@ workflows:
     - build_app:
         filters:
           branches:
-            only: /.*/
-          tags:
-            ignore: /^v[0-9]+(\.[0-9]+)*$/
+            only: master
+    - deploy_single_ecs_cluster:
+        requires:
+          - build_app
+        filters:
+          branches:
+            only: master
   cd_prod:
     jobs:
     - build_app:

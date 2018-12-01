@@ -6,7 +6,7 @@
 .idea/
 
 # .tfstate files
-infra/terraform.tfstate
+terraform/single-ecs-cluster/terraform.tfstate
 *.tfstate.*
 
 # Crash log files
