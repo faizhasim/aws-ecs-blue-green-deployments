@@ -124,7 +124,8 @@ workflows:
           branches:
             ignore:
               - master
-  cd_no_blue_green:
+
+  cd_blue_green:
     jobs:
     - build_app:
         filters:
@@ -132,14 +133,7 @@ workflows:
             only: master
     - deploy_single_ecs_cluster:
         requires:
-          - build_app
-        filters:
-          branches:
-            only: master
-
-  cd_blue_green:
-    jobs:
-    - build_app:
+        - build_app
         filters:
           branches:
             only: master
