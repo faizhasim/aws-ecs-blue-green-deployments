@@ -29,3 +29,7 @@ variable "awsvpc_service_subnetids" {
   type        = "list"
   default     = []
 }
+
+variable "docker_image_tag" {
+  default     = "latest"
+}

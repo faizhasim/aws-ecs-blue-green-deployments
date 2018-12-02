@@ -6,3 +6,7 @@ variable "aws_region" {
 variable "route53_zone_id" {
   default = "Z26GY0MAFBIOJQ"
 }
+
+variable "docker_image_tag" {
+  default = "latest"
+}

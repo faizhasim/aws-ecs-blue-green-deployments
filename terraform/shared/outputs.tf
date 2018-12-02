@@ -1,9 +1,3 @@
-//
-//output "instance_security_group" {
-//  value = "${aws_security_group.instance_sg.id}"
-//}
-
-
 output "vpc_id" {
   description = "The ID of the VPC"
   value       = "${module.vpc.vpc_id}"
