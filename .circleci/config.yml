@@ -117,14 +117,14 @@ jobs:
 
 workflows:
   version: 2
-#  ci_only:
-#    jobs:
-#    - build_app:
-#        filters:
-#          branches:
-#            ignore:
-#              - master
-  cd_test:
+  ci_only:
+    jobs:
+    - build_app:
+        filters:
+          branches:
+            ignore:
+              - master
+  cd_no_blue_green:
     jobs:
     - build_app:
         filters:
@@ -137,20 +137,18 @@ workflows:
           branches:
             only: master
 
-  blue_green_branch:
+  cd_blue_green:
     jobs:
     - build_app:
         filters:
           branches:
-            ignore:
-              - master
+            only: master
     - deploy_blue_green_ecs_cluster:
         requires:
           - build_app
         filters:
           branches:
-            ignore:
-              - master
+            only: master
     - request-flip-dns:
         type: approval
         requires:
@@ -158,12 +156,3 @@ workflows:
     - flip-dns:
         requires:
           - request-flip-dns
-
-  cd_prod:
-    jobs:
-    - build_app:
-        filters:
-          branches:
-            ignore: /.*/
-          tags:
-            only: /^v[0-9]+(\.[0-9]+)*$/
