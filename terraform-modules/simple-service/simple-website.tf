@@ -20,7 +20,7 @@ module "simple-website" {
   source = "git::https://github.com/faizhasim/terraform-aws-ecs-service.git?ref=output-alb-zone-id"
 
   service_name          = "${var.service-name}"
-  service_desired_count = 1
+  service_desired_count = 2
 
   environment = "prod"
 

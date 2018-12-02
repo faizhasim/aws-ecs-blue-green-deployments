@@ -2,6 +2,7 @@ const express = require('express')
 const os = require('os');
 const { machineIdSync } = require('node-machine-id')
 const humanizeDuration = require('humanize-duration')
+const { name, version } = require('./package.json')
 
 const app = express()
 
@@ -38,14 +39,14 @@ app.get('/', (req, res) => res.send(`
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
   <body>
-    <section class="hero is-dark is-fullheight">
+    <section class="hero is-dark is-fullheight"">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">
-            a simple nginx (or equivalent) serving a static file
+            ${name} @ ${version}
           </h1>
           <h2 class="subtitle">
-            that shows some info on the hosted machine
+            a simple nginx (or equivalent) serving a static file that shows some info on the hosted machine
           </h2>
           <div class="field is-grouped is-grouped-multiline">
             ${generateInfo()}
