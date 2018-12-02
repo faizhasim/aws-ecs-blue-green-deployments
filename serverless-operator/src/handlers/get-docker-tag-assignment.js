@@ -57,12 +57,12 @@ export const handler = async (event, context) => {
     await getInfo(dns1)
   )
 
-  const dnsWithTraffic = actualWeight[dns0] > actualWeight[dns1]?
-    dns0 :
-    dns1
+  const dnsWithoutTraffic = actualWeight[dns0] > actualWeight[dns1]?
+    dns1 :
+    dns0
 
-  debug(`Updating ${dnsWithTraffic} with docker tag ${newDockerTag}`)
-  await updateSimpleServiceDockerTag(dnsWithTraffic)(newDockerTag)
+  debug(`Updating ${dnsWithoutTraffic} with docker tag ${newDockerTag}`)
+  await updateSimpleServiceDockerTag(dnsWithoutTraffic)(newDockerTag)
 
   const assignments = {
     [dns0]: await getSimpleServiceDockerTag(dns0),
@@ -73,9 +73,9 @@ export const handler = async (event, context) => {
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
+    body: JSON.stringify(
       assignments
-    }),
+    ),
   };
 }
 
