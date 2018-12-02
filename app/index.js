@@ -38,7 +38,7 @@ app.get('/', (req, res) => res.send(`
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
   </head>
   <body>
-    <section class="hero is-dark is-fullheight">
+    <section class="hero is-dark is-fullheight" style="background-color: #4b324e;">
       <div class="hero-body">
         <div class="container">
           <h1 class="title">

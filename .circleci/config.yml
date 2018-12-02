@@ -55,15 +55,65 @@ jobs:
         name: terraform apply
         command: cd terraform/single-ecs-cluster && terraform apply -auto-approve -var "docker_image_tag=${CIRCLE_SHA1}"
 
+  deploy_blue_green_ecs_cluster:
+    working_directory: ~/deploy
+    docker:
+    - image: hashicorp/terraform:0.11.10
+    steps:
+    - checkout
+    - run:
+        name: terraform init
+        command: cd terraform/blue-green-ecs-cluster && terraform init -backend=true -force-copy -get=true -input=false
+    - deploy:
+        name: terraform apply for fresh infra
+        command: |
+          (curl -f -X GET -H "x-api-key: ${OPERATOR_API_KEY}" ${OPERATOR_BASE_URL}/is-dynamo-empty && \
+            cd terraform/blue-green-ecs-cluster && \
+            terraform apply -auto-approve -var "blue_docker_image_tag=${CIRCLE_SHA1}" -var "green_docker_image_tag=${CIRCLE_SHA1}" ) || echo 'Skipping terraform apply for existing infra'
+    - deploy:
+        name: terraform apply dockertag to standby infra
+        command: |
+          set +euo pipefail
+          apk add --no-cache jq
+
+          cd terraform/blue-green-ecs-cluster
+
+          export blue_lb_dns_name=$(terraform output blue_lb_dns_name)
+          export blue_lb_zone_id=$(terraform output blue_lb_zone_id)
+          export green_lb_dns_name=$(terraform output green_lb_dns_name)
+          export green_lb_zone_id=$(terraform output green_lb_zone_id)
+
+          echo blue_lb_dns_name = ${blue_lb_dns_name}
+          echo blue_lb_zone_id = ${blue_lb_zone_id}
+          echo green_lb_dns_name = ${green_lb_dns_name}
+          echo green_lb_zone_id = ${green_lb_zone_id}
+
+          echo curl -X POST \
+                   -H "x-api-key: ${OPERATOR_API_KEY}" \
+                   --data "{\"loadbalancers\":[{\"dns\":\"${blue_lb_dns_name}\",\"zoneId\":\"${blue_lb_zone_id}\"},{\"dns\":\"${green_lb_dns_name}\",\"zoneId\":\"${green_lb_zone_id}\"}],\"newDockerTag\":\"${CIRCLE_SHA1}\"}" \
+                   ${OPERATOR_BASE_URL}/docker-tag-assignment
+
+          export DockerAssignmentJson=$(curl -X POST \
+                                                           -H "x-api-key: ${OPERATOR_API_KEY}" \
+                                                           --data "{\"loadbalancers\":[{\"dns\":\"${blue_lb_dns_name}\",\"zoneId\":\"${blue_lb_zone_id}\"},{\"dns\":\"${green_lb_dns_name}\",\"zoneId\":\"${green_lb_zone_id}\"}],\"newDockerTag\":\"${CIRCLE_SHA1}\"}" \
+                                                           ${OPERATOR_BASE_URL}/docker-tag-assignment)
+
+          echo DockerAssignmentJson: ${DockerAssignmentJson}
+          export BlueDockerImageTag=$(echo $DockerAssignmentJson | jq ".[\"$blue_lb_dns_name\"]")
+          export GreenDockerImageTag=$(echo $DockerAssignmentJson | jq ".[\"$green_lb_dns_name\"]")
+
+          echo Applying changes
+          terraform apply -auto-approve -var "blue_docker_image_tag=${BlueDockerImageTag}"  -var "green_docker_image_tag=${GreenDockerImageTag}"
+
 workflows:
   version: 2
-  ci_only:
-    jobs:
-    - build_app:
-        filters:
-          branches:
-            ignore:
-              - master
+#  ci_only:
+#    jobs:
+#    - build_app:
+#        filters:
+#          branches:
+#            ignore:
+#              - master
   cd_test:
     jobs:
     - build_app:
@@ -76,6 +126,22 @@ workflows:
         filters:
           branches:
             only: master
+
+  blue_green_branch:
+    jobs:
+    - build_app:
+        filters:
+          branches:
+            ignore:
+              - master
+    - deploy_blue_green_ecs_cluster:
+        requires:
+          - build_app
+        filters:
+          branches:
+            ignore:
+              - master
+
   cd_prod:
     jobs:
     - build_app:
