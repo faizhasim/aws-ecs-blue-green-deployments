@@ -53,7 +53,7 @@ jobs:
         command: cd terraform/single-ecs-cluster && terraform init -backend=true -force-copy -get=true -input=false
     - deploy:
         name: terraform apply
-        command: cd terraform/single-ecs-cluster && terraform apply -auto-approve
+        command: cd terraform/single-ecs-cluster && terraform apply -auto-approve -var "docker_image_tag=${CIRCLE_SHA1}"
 
 workflows:
   version: 2

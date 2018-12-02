@@ -12,12 +12,12 @@ data "template_file" "simple-website" {
   vars {
     container_name   = "${var.service-name}"
     container_port   = "${local.container_port}"
-    image_version    = "latest"
+    image_version    = "${var.docker_image_tag}"
   }
 }
 
 module "simple-website" {
-  source  = "npalm/ecs-service/aws"
+  source = "git::https://github.com/faizhasim/terraform-aws-ecs-service.git?ref=output-alb-zone-id"
 
   service_name          = "${var.service-name}"
   service_desired_count = 1
