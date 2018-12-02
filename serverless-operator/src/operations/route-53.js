@@ -11,7 +11,7 @@ const debug = Debug('op:route-53')
  * @param blueInfo {aliasDnsName, aliasZoneId, weight}
  * @returns {Promise<void>}
  */
-export const modifyRoute53Records = async (HostedZoneId, domainName, greenInfo, blueInfo) => {
+export const upsertRoute53Records = async (HostedZoneId, domainName, greenInfo, blueInfo) => {
   const params = {
     ChangeBatch: {
       Changes: [
@@ -26,7 +26,7 @@ export const modifyRoute53Records = async (HostedZoneId, domainName, greenInfo, 
             Name: domainName,
             SetIdentifier: 'Green',
             Type: 'A',
-            Weight: !greenInfo.weight ? 100 : greenInfo.weight
+            Weight: greenInfo.weight
           }
         }, {
           Action: 'UPSERT',
@@ -39,7 +39,7 @@ export const modifyRoute53Records = async (HostedZoneId, domainName, greenInfo, 
             Name: domainName,
             SetIdentifier: 'Blue',
             Type: 'A',
-            Weight: !blueInfo.weight ? 0 : greenInfo.weight
+            Weight: blueInfo.weight
           }
         }
       ],

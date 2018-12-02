@@ -105,6 +105,16 @@ jobs:
           echo Applying changes
           terraform apply -auto-approve -var "blue_docker_image_tag=${BlueDockerImageTag}"  -var "green_docker_image_tag=${GreenDockerImageTag}"
 
+  flip-dns:
+    working_directory: ~/deploy
+    docker:
+      - image: hashicorp/terraform:0.11.10
+    steps:
+      - run:
+          name: flip-dns
+          command: |
+            curl -f -X POST -H "x-api-key: ${OPERATOR_API_KEY}" ${OPERATOR_BASE_URL}/flip-dns
+
 workflows:
   version: 2
 #  ci_only:
@@ -141,6 +151,13 @@ workflows:
           branches:
             ignore:
               - master
+    - request-flip-dns:
+        type: approval
+        requires:
+          - deploy_blue_green_ecs_cluster
+    - flip-dns:
+        requires:
+          - request-flip-dns
 
   cd_prod:
     jobs:

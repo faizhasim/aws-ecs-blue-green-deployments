@@ -6,7 +6,7 @@ import {
   updateLoadBalancerZoneId, updateSimpleServiceDockerTag
 } from "../operations/state-management"
 import { Route53DomainName, Route53HostedZoneId } from '../operations/config'
-import { modifyRoute53Records } from "../operations/route-53"
+import { upsertRoute53Records } from "../operations/route-53"
 
 const debug = Debug('op:get-docker-tag-assignments')
 
@@ -50,7 +50,7 @@ export const handler = async (event, context) => {
     weight: actualWeight[dns]
   })
 
-  await modifyRoute53Records(
+  await upsertRoute53Records(
     Route53HostedZoneId,
     Route53DomainName,
     await getInfo(dns0),

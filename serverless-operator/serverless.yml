@@ -64,13 +64,6 @@ plugins:
 - serverless-webpack
 
 functions:
-  hello:
-    handler: handler.hello
-    events:
-      - http:
-          path: hello
-          method: get
-          private: true
   isDynamoEmpty:
     handler: src/handlers/is-dynamo-empty.handler
     events:
@@ -83,6 +76,13 @@ functions:
     events:
     - http:
         path: docker-tag-assignment
+        method: post
+        private: true
+  flipDns:
+    handler: src/handlers/flip-dns.handler
+    events:
+    - http:
+        path: flip-dns
         method: post
         private: true
 
