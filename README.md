@@ -1,2 +1,11 @@
+# aws-ecs-blue-green-deployments [![CircleCI](https://circleci.com/gh/faizhasim/aws-ecs-blue-green-deployments/tree/master.svg?style=svg)](https://circleci.com/gh/faizhasim/aws-ecs-blue-green-deployments/tree/master)
 
-terraform init -backend-config="bucket=com.faizhasim.terraform" -backend-config="key=2018-12-01-terraform.tfstate" -backend-config="region=ap-southeast-1" -backend=true -force-copy -get=true -input=false
+> Yet another sample on blue-green deployment using ECS with terraform and serverless on the Internet
+
+## High Level Architecture
+
+Refer to [Architecture](./docs/architecture.md).
+
+## Blue-Green Deployment Workflow
+
+Refer to [Sample Workflow](./docs/blue-green-in-action.md).
