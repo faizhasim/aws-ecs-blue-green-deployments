@@ -28,6 +28,10 @@ const generateInfo = () => [
   createTag('machine-id', machineIdSync().substring(0,6))
 ].join('\n')
 
+const avatarUrl = () =>
+  `https://randomuser.me/api/portraits/lego/${String(parseInt(machineIdSync().substring(0,6), 16))[0]}.jpg`
+
+
 app.get('/', (req, res) => res.send(`
 <!DOCTYPE html>
 <html>
@@ -42,14 +46,23 @@ app.get('/', (req, res) => res.send(`
     <section class="hero is-dark is-fullheight"">
       <div class="hero-body">
         <div class="container">
-          <h1 class="title">
-            ${name} @ ${version}
-          </h1>
-          <h2 class="subtitle">
-            a simple nginx (or equivalent) serving a static file that shows some info on the hosted machine
-          </h2>
-          <div class="field is-grouped is-grouped-multiline">
-            ${generateInfo()}
+          <div class="columns">
+            <div class="column is-one-fifth has-text-right">
+              <figure class="image is-128x128 is-inline-block-tablet is-block-mobile">
+                <img class="is-rounded" style="border: #f5f5f5 0.2em solid;" src="${avatarUrl()}">
+              </figure>
+            </div>
+            <div class="column">
+              <h1 class="title">
+                ${name} @ ${version}
+              </h1>
+              <h2 class="subtitle">
+                a simple nginx (or equivalent) serving a static file that shows some info on the hosted machine
+              </h2>
+              <div class="field is-grouped is-grouped-multiline">
+                ${generateInfo()}
+              </div>
+            </div>
           </div>
         </div>
       </div>
