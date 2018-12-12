@@ -42,6 +42,28 @@ jobs:
           docker push "${DOCKER_IMAGE}:${CIRCLE_SHA1}"
           docker push "${DOCKER_IMAGE}:latest"
 
+  deploy_serverless_operator:
+    working_directory: ~/deploy
+    docker:
+    - image: circleci/node:11
+    steps:
+    - checkout
+    - restore_cache:
+        keys:
+          - v1-dependencies-{{ checksum "serverless-operator/package.json" }}
+    - run:
+        name: yarn install
+        command: |
+          cd serverless-operator && yarn install
+    - save_cache:
+        paths:
+        - node_modules
+        key: v1-dependencies-{{ checksum "serverless-operator/package.json" }}
+    - deploy:
+        name: yarn sls deploy
+        command: |
+          cd serverless-operator && yarn run sls deploy
+
   deploy_single_ecs_cluster:
     working_directory: ~/deploy
     docker:
@@ -128,6 +150,12 @@ workflows:
   cd_blue_green:
     jobs:
     - build_app:
+        filters:
+          branches:
+            only: master
+    - deploy_serverless_operator:
+        requires:
+        - build_app
         filters:
           branches:
             only: master
