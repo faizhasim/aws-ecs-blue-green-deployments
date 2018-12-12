@@ -11,7 +11,7 @@ const debug = Debug('op:route-53')
  * @param blueInfo {aliasDnsName, aliasZoneId, weight}
  * @returns {Promise<void>}
  */
-export const upsertRoute53Records = async (HostedZoneId, domainName, greenInfo, blueInfo) => {
+export const upsertRoute53Records = async (HostedZoneId, domainName, blueInfo, greenInfo) => {
   const params = {
     ChangeBatch: {
       Changes: [
