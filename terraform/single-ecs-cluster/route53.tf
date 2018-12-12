@@ -1,5 +1,5 @@
 locals {
-  name = "test.at.faizhasim.tech"
+  name = "test.faizhasim.tech"
 }
 
 resource "aws_route53_record" "www" {
