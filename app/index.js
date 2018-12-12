@@ -1,5 +1,6 @@
 const express = require('express')
-const os = require('os');
+const os = require('os')
+const crypto = require('crypto')
 const { machineIdSync } = require('node-machine-id')
 const humanizeDuration = require('humanize-duration')
 const { name, version } = require('./package.json')
@@ -28,9 +29,15 @@ const generateInfo = () => [
   createTag('machine-id', machineIdSync().substring(0,6))
 ].join('\n')
 
-const avatarUrl = () =>
-  `https://randomuser.me/api/portraits/lego/${String(parseInt(machineIdSync().substring(0,6), 16))[0]}.jpg`
-
+const avatarUrl = () => {
+  const id = input => String(
+    parseInt(crypto.createHash('md5')
+      .update(input)
+      .digest('hex')
+      .substring(0,6), 16)
+  )[3];
+  return `https://randomuser.me/api/portraits/lego/${id(os.hostname() + machineIdSync().substring(0,6) + version)}.jpg`;
+}
 
 app.get('/', (req, res) => res.send(`
 <!DOCTYPE html>
