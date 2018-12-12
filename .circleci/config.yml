@@ -175,6 +175,7 @@ workflows:
         type: approval
         requires:
           - deploy_blue_green_ecs_cluster
+          - deploy_serverless_operator
     - flip-dns:
         requires:
           - request-flip-dns
