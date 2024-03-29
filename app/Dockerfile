@@ -1,4 +1,4 @@
-FROM node:11-alpine
+FROM node:20-alpine
 
 ADD package.json package.json
 ADD yarn.lock yarn.lock
