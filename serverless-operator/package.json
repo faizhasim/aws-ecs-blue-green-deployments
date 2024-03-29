@@ -9,7 +9,7 @@
     "debug": "^4.1.0",
     "dynogels": "^9.0.0",
     "joi": "^14.3.0",
-    "serverless": "^1.34.1"
+    "serverless": "^3.0.0"
   },
   "devDependencies": {
     "@babel/core": "^7.1.6",
