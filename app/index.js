@@ -19,6 +19,8 @@ const createTag = (title, value) => `
   </div>
   `
 
+const greetingMessage = () => process.env.GREETING || 'Everything is awesome!'
+
 const generateInfo = () => [
   createTag('hostname', os.hostname()),
   createTag('arch', os.arch()),
@@ -47,7 +49,7 @@ app.get('/', (req, res) => res.send(`
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>papaadamango</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.1/css/bulma.min.css">
     <script defer src="https://use.fontawesome.com/releases/v5.3.1/js/all.js"></script>
     <style id="code">
     .speech-bubble {
@@ -112,7 +114,7 @@ app.get('/', (req, res) => res.send(`
             <div class="column is-one-fifth has-text-right fix-column-position">
               <div class="speech-bubble">
                 <h1 style="font-size: large;">${greeting.random()}</h1>
-                <h2 style="font-size: small;">Everything is awesome!</h2>
+                <h2 style="font-size: small;">${greetingMessage()}</h2>
               </div>
               <figure class="image is-128x128 is-inline-block-tablet is-block-mobile">
                 <img class="is-rounded" style="border: #f5f5f5 0.2em solid;" src="${avatarUrl()}">
