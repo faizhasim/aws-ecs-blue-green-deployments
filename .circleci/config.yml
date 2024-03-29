@@ -33,7 +33,7 @@ jobs:
         key: v1-{{ .Branch }}-{{ epoch }}
         paths:
           - ~/caches/app.tar
-    - deploy:
+    - run:
         name: Push application Docker image
         command: |
           export DOCKER_IMAGE=faizhasim/papaadamango
@@ -59,7 +59,7 @@ jobs:
         paths:
         - node_modules
         key: v1-dependencies-{{ checksum "serverless-operator/package.json" }}
-    - deploy:
+    - run:
         name: yarn sls deploy
         command: |
           cd serverless-operator && yarn run sls deploy
@@ -73,7 +73,7 @@ jobs:
     - run:
         name: terraform init
         command: cd terraform/single-ecs-cluster && terraform init -backend=true -force-copy -get=true -input=false
-    - deploy:
+    - run:
         name: terraform apply
         command: cd terraform/single-ecs-cluster && terraform apply -auto-approve -var "docker_image_tag=${CIRCLE_SHA1}"
 
@@ -86,13 +86,13 @@ jobs:
     - run:
         name: terraform init
         command: cd terraform/blue-green-ecs-cluster && terraform init -backend=true -force-copy -get=true -input=false
-    - deploy:
+    - run:
         name: terraform apply for fresh infra
         command: |
           (curl -f -X GET -H "x-api-key: ${OPERATOR_API_KEY}" ${OPERATOR_BASE_URL}/is-dynamo-empty && \
             cd terraform/blue-green-ecs-cluster && \
             terraform apply -auto-approve -var "blue_docker_image_tag=${CIRCLE_SHA1}" -var "green_docker_image_tag=${CIRCLE_SHA1}" ) || echo 'Skipping terraform apply for existing infra'
-    - deploy:
+    - run:
         name: terraform apply dockertag to standby infra
         command: |
           set +euo pipefail
