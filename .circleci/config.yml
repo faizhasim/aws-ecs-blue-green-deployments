@@ -67,7 +67,7 @@ jobs:
   deploy_single_ecs_cluster:
     working_directory: ~/deploy
     docker:
-    - image: hashicorp/terraform:0.11.10
+    - image: hashicorp/terraform:1.8.5
     steps:
     - checkout
     - run:
@@ -80,7 +80,7 @@ jobs:
   deploy_blue_green_ecs_cluster:
     working_directory: ~/deploy
     docker:
-    - image: hashicorp/terraform:0.11.10
+    - image: hashicorp/terraform:1.8.5
     steps:
     - checkout
     - run:
@@ -130,7 +130,7 @@ jobs:
   flip-dns:
     working_directory: ~/deploy
     docker:
-      - image: hashicorp/terraform:0.11.10
+      - image: hashicorp/terraform:1.8.5
     steps:
       - run:
           name: flip-dns
