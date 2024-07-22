@@ -3,7 +3,7 @@ jobs:
   build_app:
     working_directory: ~/app
     docker:
-    - image: circleci/node:11
+    - image: circleci/node:17
     steps:
     - checkout
     - setup_remote_docker
@@ -45,7 +45,7 @@ jobs:
   deploy_serverless_operator:
     working_directory: ~/deploy
     docker:
-    - image: circleci/node:11
+    - image: circleci/node:17
     steps:
     - checkout
     - restore_cache:
